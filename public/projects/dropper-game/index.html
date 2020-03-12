@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Dropper game</title>
+<style>
+.about{
+  opacity:1;
+  transition: 500ms;
+}
+.about.active {
+  opacity: 0;
+}
+#title{
+  color:#0a7806;
+}
+#instructions{
+  color:#8f137e;
+}
+.buttons{
+  color:#759cff;
+}
+#rickroll{
+  background-color:#000000
+}
+</style>
+</head>
+<body translate="no">
+<div class="about">
+<h4 id="title">Ball Drop by Nam Bui</h4>
+<h5 id="instructions">Instructions: Click the screen or press space to drop a ball from the dropper. Try to get the ball into the green zone. Beware of the red zone: landing the ball there will lose lives. As you score, the dropper will speed up.
+</h5>
+</div>
+<div class="buttons">
+<button id="toggleInstruct" onclick="toggleInstruct()">Toggle Instructions</button>
+</div>
+<span id="1">
+<div>
+<img src=https://fanart.tv/fanart/music/db92a151-1ac2-438b-bc43-b82e149ddd50/hdmusiclogo/astley-rick-58119b1dea396.png onclick="rickroll()" height="100" width="500" id="rickroll">
+</div>
+<canvas id='game' style="
+               border: 1px solid grey" width=500 height=500>
+</canvas>
+<br>
+<a href="https://www.tomhinkle.net/util/simplecanvasdocs/">Docs...</a>
+<script src='https://tomhinkle.net/util/SimpleCanvasLibrary.js'></script>
+<script id="rendered-js">
+game = GameCanvas('game');
+
+var target = game.addDrawing(
+  function({ctx}){
+    //draws target
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0,490,500,10);
+    ctx.fillStyle = 'red';
+    ctx.fillRect(190,490,120,10);
+    ctx.fillStyle = 'green';
+    ctx.fillRect(220,490,60,10);
+  }
+);
+
+var dropper_sprite = new Image();
+dropper_sprite.src = "https://i.imgur.com/8edr5l3.png";
+function dropper({ctx,dropper_x,dropper_y}){
+  //draws the dropper
+  ctx.drawImage(dropper_sprite,dropper_x-60,dropper_y-80,120,80);
+  /*
+  ctx.fillStyle = 'black';
+  ctx.beginPath();
+  ctx.moveTo(dropper_x,dropper_y);
+  ctx.lineTo(dropper_x+60,dropper_y-80);
+  ctx.lineTo(dropper_x-60,dropper_y-80);
+  ctx.closePath();
+  ctx.fill();
+  */
+}
+
+function ball({ctx,ball_x,ball_y,color}){
+  //draws ball
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.arc(ball_x,ball_y,15,0,2*Math.PI,false);
+  ctx.fill();
+}
+
+var speed = 110;
+var dropper_velocity = speed;
+var prev_x = 0;
+var triangle = game.addDrawing(function ({ctx,stepTime}) {
+  //draws dropper
+  var dropper_x = dropper_velocity*(stepTime/1000)+prev_x;
+  if (dropper_x<-10 || dropper_x>550){
+    dropper_x = 0;
+  }
+  prev_x = dropper_x
+  if (dropper_x > 500){
+    dropper_velocity = -speed;
+  }
+  else if (dropper_x < 0){
+    dropper_velocity = speed;
+  }
+  const dropper_y = 100;
+  dropper({ctx,dropper_x,dropper_y});
+});
+
+var score = 0;
+var lives = 5;
+var scoreboard = game.addDrawing(
+  function({ctx}){
+    //displays score
+    ctx.beginPath();
+    ctx.moveTo(150,300);
+    ctx.lineTo(350,300);
+    ctx.lineTo(350,200);
+    ctx.lineTo(150,200);
+    ctx.closePath();
+    ctx.stroke();
+    ctx.fillStyle = 'black';
+    ctx.font = '30px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText("SCORE:",250,250);
+    ctx.fillText(score,250,280);
+    ctx.font = '20px Arial';
+    ctx.fillText("Lives: "+lives,464,18);
+  }
+);
+
+var handler;
+var handler2;
+function restart(){
+  score = 0;
+  lives = 5;
+  speed = 110;
+  const drawings = [target,scoreboard,triangle];
+  for (i = 0;i<drawings.length;i+=1){//restores game drawings
+      game.restoreDrawing(drawings[i]);
+  }
+  setTimeout(  
+    function(){
+      handler = game.addHandler('keyup',
+        function({event}){
+        if (event.key == " "){
+          draw_ball();
+         }
+      }
+    );
+    handler2 = game.addHandler('click',
+      function({x,y}){
+        draw_ball();
+      }
+    );
+  },50);
+}
+
+function endgame(){
+  var things = [target,scoreboard,triangle];
+  for (i = 0;i<things.length;i+=1){//removes game drawings
+      game.removeDrawing(things[i]);
+  }
+  game.removeHandler('keyup',handler);
+  game.removeHandler('click',handler2);
+  if(localStorage.getItem("dropper_highscores") == undefined){
+    var highscore = JSON.stringify(score);
+    localStorage.setItem("dropper_highscores",highscore);
+  }
+  else{
+    var highscores = localStorage.getItem("dropper_highscores");
+    var highscore = JSON.parse(highscores);
+    if (score>Number(highscore)){
+      highscore = JSON.stringify(score);
+    }
+    localStorage.setItem("dropper_highscores",highscore);
+  }
+  var final_score = game.addDrawing(
+    function({ctx}){
+    //displays final score
+    ctx.fillStyle = 'green';
+    ctx.font = '30px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText("GAME OVER",250,200);
+    ctx.fillText("SCORE: "+score,250,245);
+    ctx.fillText("HIGHSCORE: "+JSON.parse(localStorage.getItem("dropper_highscores")),250,290)
+    }
+  );
+  var restart_button = game.addDrawing(
+    function({ctx}){
+      ctx.strokeStyle = 'black';
+      ctx.moveTo(180,300);ctx.lineTo(320,300);ctx.lineTo(320,350);ctx.lineTo(180,350);ctx.closePath();
+      ctx.stroke();
+      ctx.fillStyle = '#1a4a9c';
+      ctx.font = '30px Arial';
+      ctx.textAlign = 'center';
+      ctx.fillText("RESTART",250,330);
+    }
+  );
+  var restart_handler = game.addHandler('click',
+    function({x,y}){
+      if(x>180 && x<320){
+        if(y>300 && y<350){
+          game.removeHandler('click',restart_handler);
+          game.removeDrawing(restart_button);
+          game.removeDrawing(final_score);
+          restart();
+        }
+      }
+    }
+  );
+}
+
+function draw_ball(){
+  //draws ball when space is clicked
+  const colors = ['#eb4034','#31ad28','#15979e','#2b3bad','#82279c','#e89f0c','#fae900'];
+  var color = colors[Math.floor(Math.random()*colors.length)];
+  var ball_y = 100;
+  var ball_x = prev_x;
+  const gravity = 9;
+  var v_y = 0;
+  var bounce = 1;
+  game.addDrawing(
+    function({ctx,stepTime,remove}){
+      v_y += gravity;
+      ball_y += v_y*(stepTime/1000);
+      ball_x += dropper_velocity*(stepTime/1000);
+      ball({ctx,ball_x,ball_y,color});
+      if (ball_y > 490){
+        if (ball_x > 220 && ball_x < 280){
+          score += 1;
+          speed += 5;
+          remove();
+        }
+        else if ((ball_x > 190 && ball_x < 220) || (ball_x > 280 && ball_x < 310)){
+          lives += -1;
+          remove();
+          if (lives == 0){
+            endgame();
+          }
+        }
+        else {
+          v_y = (-v_y/(bounce+1))*1.5;
+          bounce += 1;
+          if (v_y > -1){
+            remove();
+          }
+        }
+      }
+    }
+  );
+}
+var play = true;
+var background_sound = document.createElement("audio");
+background_sound.src = "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/ccCommunity/Chad_Crouch/Arps/Chad_Crouch_-_Shipping_Lanes.mp3";
+handler = game.addHandler('keyup',
+  function({event}){
+    if (event.key == " "){
+      draw_ball();
+    }
+    if (play==true){
+      background_sound.play();
+      background_sound.loop = true;
+      play = false;
+    }
+  }
+);
+handler2 = game.addHandler('click',
+  function({x,y}){
+    draw_ball();
+    if (play==true){
+      background_sound.play();
+      background_sound.loop = true;
+      play = false;
+    }
+  }
+);
+
+game.run();
+
+function toggleInstruct(){
+  document.querySelector('.about').classList.toggle('active');
+}
+
+function rickroll(){
+  window.location.href="https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+}
+    </script>
+</body>
+</html>
