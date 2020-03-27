@@ -14,9 +14,16 @@ function main_menu(){
     var menu_template = new Image(); menu_template.src = 'menu_frame.png';
     ctx.drawImage(menu_template,canvas.width/3,canvas.height/4,canvas.width/3,canvas.height/2);
     //menu header
-
     //menu buttons
-    
 }
 
-main_menu()
+main_menu();
+
+game = GameCanvas('game');
+game.addDrawing(
+    function({ctx}){
+        var background = new Image(); background.src = 'menu_background.png';
+        ctx.drawImage(background,0,0,canvas.width,canvas.height);
+    }
+);
+game.run();
