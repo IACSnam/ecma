@@ -8,4 +8,7 @@ background_canvas.width = game_canvas.width;
 var x_factor = game_canvas.width/1280;
 var y_factor = game_canvas.height/720;
 
+game = GameCanvas('game');
+background_ctx = background_canvas.getContext("2d");
 
+game.run();
