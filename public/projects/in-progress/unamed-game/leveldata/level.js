@@ -1,9 +1,9 @@
-{
-    "background":"assests/backgrounds/sky-background.png",
+var levelData = {
+    "background":"",
     "blocks":{
         "dirt":{
-            "x":[[0,"upper"]],
-            "y":[[0,"upper"]]
+            "x":[],
+            "y":[]
         },
         "grass":{
             "x":[],
@@ -14,17 +14,11 @@
             "y":[]
         },
         "traps":{
-            "x":[null],
-            "y":[null]
-        }
-    },
-    "mobs":{
-        "krunk":{
             "x":[],
-            "y":[],
-            "movement":[]
+            "y":[]
         }
     },
+    "mobs":{},
     "spawn":{
         "x":0,
         "y":0

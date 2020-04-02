@@ -1,5 +1,10 @@
-function level_constructor(levelData){
+const activeGameDrawings = [];
 
+function level_constructor(levelData){
+    levelData["blocks"].foreach(
+        function(item){
+        }
+    );
 }
 
 function get_levelData(level){
