@@ -1,5 +1,5 @@
-var game_canvas = document.getElementById('game');
-var background_canvas = document.getElementById('background');
+const game_canvas = document.getElementById('game');
+const background_canvas = document.getElementById('background');
 
 //sizing canvases
 game_canvas.height = window.innerHeight*.95;
@@ -29,6 +29,7 @@ function run(){
     background_ctx = background_canvas.getContext("2d");
     //start drawing etc
     game.run();
+    menu();
 }
 
 //start

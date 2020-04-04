@@ -1,5 +1,5 @@
 const level0 = {
-    "background":"assests/backgrounds/sky-background.png",
+    "background":"assets/backgrounds/sky-background.png",
     "blocks":{
         "dirt":{
             "x":[[0,11],[14,16],[17,22],[23,32],[33,39]],

@@ -25,10 +25,9 @@ function addbackground(backgroundfile){
 
 function level_constructor(levelData,user_sprite){
     addbackground(levelData["background"]);
-    levelData["blocks"].foreach(
-        function(item){
-        }
-    );
+    Object.keys(levelData.blocks).forEach(element => {//i got this from stack overflow: https://stackoverflow.com/questions/8312459/iterate-through-object-properties
+        console.log(element);
+    });
 }
 
 function main_game(level=0,user_sprite='blue-person.png'){
