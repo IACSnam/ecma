@@ -7,13 +7,14 @@ const assetData = {
         "grass":"grass.png",
         "red-brick":"red-brick.png",
         "traps":{
-            "spikes":""
+            "spikes":"spike.png"
         }
     },
     mobs:{
+        "krunk":"krunk.png"
     },
-    coins:"",
-    end:""
+    coins:"coin.png",
+    end:"end.png"
 }
 
 function addbackground(backgroundfile){
@@ -30,16 +31,11 @@ function level_constructor(levelData,user_sprite){
     );
 }
 
-function get_levelData(level){
-    const levelFilename = "leveldata/level"+String(level)+".js";
-    
-    return levelData;
-}
-
 function main_game(level=0,user_sprite='blue-person.png'){
-    var levelData = get_levelData(level);
+    var levelData = levels[level];
     var level = level_constructor(levelData,user_sprite);
 }
 
-//only for testing
-main_game();
+function menu(){
+    main_game();
+}

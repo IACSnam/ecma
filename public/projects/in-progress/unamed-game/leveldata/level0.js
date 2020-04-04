@@ -1,4 +1,4 @@
-var levelData = {
+const level0 = {
     "background":"assests/backgrounds/sky-background.png",
     "blocks":{
         "dirt":{

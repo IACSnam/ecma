@@ -1,8 +1,16 @@
 [4/2/2020]
 --Changes--
-Literally everything
+added menu, sprites, leveldata, blocks, and backgrounds folders
+
+[4/4/2020]
+--Changes--
+added:
+    -level_loader()
+    -kept things in a run function
+    -made layered canvas
 
 --To-do--
 Spawn all the sprites and drawings (level constructor)
 
 --Help me Mr. Hinkle, I don't know what I'm doing--
+For some reason, I can't draw a background
