@@ -1,15 +1,4 @@
-[4/2/2020]
---Changes--
-added menu, sprites, leveldata, blocks, and backgrounds folders
-
-[4/4/2020]
---Changes--
-added:
-    -level_loader()
-    -kept things in a run function
-    -made layered canvas
-
-[4/7/2020]
+[4-8-20]
 --Changes--
 
 --To-do--
