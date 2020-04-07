@@ -9,6 +9,9 @@ added:
     -kept things in a run function
     -made layered canvas
 
+[4/7/2020]
+--Changes--
+
 --To-do--
 Spawn all the sprites and drawings (level constructor)
 
