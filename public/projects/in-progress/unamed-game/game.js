@@ -18,15 +18,15 @@ const assetData = {
 }
 
 function addbackground(backgroundfile){
-    var backgroundData = new Image;
+    var backgroundData = new Image();
     backgroundData.src = backgroundfile;
-    background_ctx.drawImage(backgroundData,0,0,1280*x_factor,720*y_factor);
+    background.onload = () => background_ctx.drawImage(backgroundData,0,0,1280*x_factor,720*y_factor);
 }
 
 function level_constructor(levelData,user_sprite){
     addbackground(levelData["background"]);
     Object.keys(levelData.blocks).forEach(element => {//i got this from stack overflow: https://stackoverflow.com/questions/8312459/iterate-through-object-properties
-        console.log(element);
+        console.log(element)
     });
 }
 
