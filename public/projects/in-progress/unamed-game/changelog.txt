@@ -1,5 +1,8 @@
-[4-8-20]
+[4-9-20]
 --Changes--
+Fixed typo and got background drawn
+Built logic of levelConstructor for block properties
+Started initializing image loader
 
 --To-do--
 Spawn all the sprites and drawings (level constructor)

@@ -13,10 +13,6 @@ var levelData = {
             "x":[],
             "y":[]
         },
-        "traps":{
-            "x":[],
-            "y":[]
-        }
     },
     "mobs":{},
     "spawn":{
