@@ -46,7 +46,7 @@ function addbackground(backgroundfile){
 function level_constructor(levelData,user_sprite){
     addbackground(levelData["background"]);
     Object.keys(levelData.blocks).forEach(element => {//i got this from stack overflow: https://stackoverflow.com/questions/8312459/iterate-through-object-properties
-        for(let i=0; i<levelData.blocks[element].x.length;i++){//iterates through each block object
+        for(let i=0; i<levelData.blocks[element].x.length; i++){//iterates through each block object
             const x_range = levelData.blocks[element].x[i];
             const y_range = levelData.blocks[element].y[i];
             for(let x=x_range[0];x<(x_range[1]+1);x++){//iterates through the ranges and draws blocks
@@ -60,8 +60,14 @@ function level_constructor(levelData,user_sprite){
                                 64*x_factor,64*y_factor);
                         }
                     );
+                    activeGameDrawings.push(drawing);
                 }
             }
+        }
+    });
+    Object.keys(levelData.mobs).forEach(element => {
+        for(let i=0; i<levelData.mobs[element].x.length; i++){
+
         }
     });
 }

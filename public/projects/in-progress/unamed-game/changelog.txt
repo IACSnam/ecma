@@ -6,8 +6,9 @@ Started initializing image loader
 
 [4-10-20]
 --Changes--
-Spawned some dirt (for some reason, the grass isn't spawing)
+Spawned some blocks
 Another weird note: the background doesn't draw properly; may be an issue with the canvas positioning
+Changed format of properties of blocks
 
 --To-do--
 Spawn all the sprites and drawings (level constructor)
