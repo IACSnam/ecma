@@ -1,6 +1,6 @@
 const activeGameDrawings = [];
 const activeMobs = [];
-const imageData = {}
+var imageData;
 var x_translate = 0;
 var y_translate = 0;
 
@@ -9,10 +9,8 @@ const assetData = {
     blocks:{
         "dirt":"dirt.png",
         "grass":"grass.png",
-        "red-brick":"red-brick.png",
-        "traps":{
-            "spikes":"spike.png"
-        }
+        "redbrick":"red-brick.png",
+        "spikes":"spike.png"
     },
     mobs:{
         "krunk":"krunk.png"
@@ -23,6 +21,20 @@ const assetData = {
 
 function init_images(){
     //will load image data
+    var dirt_image = new Image();
+    dirt_image.src = "assets/blocks/"+assetData.blocks.dirt;
+    var grass_image = new Image();
+    grass_image.src = "assets/blocks/"+assetData.blocks.grass;
+    var redbrick_image = new Image();
+    redbrick_image.src = "assets/blocks/"+assetData.blocks.redbrick;
+    var spike_image = new Image();
+    spike_image.src = "assets/blocks/"+assetData.blocks.spikes;
+    imageData = {
+        "dirt" : dirt_image,
+        "grass" : grass_image,
+        "redbrick" : redbrick_image,
+        "spike" : spike_image
+    }
 }
 
 function addbackground(backgroundfile){
@@ -41,7 +53,11 @@ function level_constructor(levelData,user_sprite){
                 for(let y=y_range[0];y<(y_range[1]+1);y++){
                     var drawing = game.addDrawing(
                         function({ctx}){
-                            //draw proper image
+                            //properly draw blocks
+                            ctx.drawImage(imageData[element],
+                                (x*64*x_factor)+x_translate,
+                                game_canvas.height-((y+1)*64*y_factor)+y_translate,
+                                64*x_factor,64*y_factor);
                         }
                     );
                 }
