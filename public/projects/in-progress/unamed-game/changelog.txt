@@ -10,6 +10,12 @@ Spawned some blocks
 Another weird note: the background doesn't draw properly; may be an issue with the canvas positioning
 Changed format of properties of blocks
 
+[4-11-20]
+--Changes--
+Worked on mobs
+Extended Sprite class to Enemy class to add velocity
+Drew some mobs (still not drawing exactly where they need to be, but at least they draw)
+
 --To-do--
 Spawn all the sprites and drawings (level constructor)
 
