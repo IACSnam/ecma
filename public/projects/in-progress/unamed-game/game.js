@@ -44,7 +44,9 @@ function addbackground(backgroundfile){
 }
 
 function level_constructor(levelData,user_sprite){
+    //draw background
     addbackground(levelData["background"]);
+    //draw blocks
     Object.keys(levelData.blocks).forEach(element => {//i got this from stack overflow: https://stackoverflow.com/questions/8312459/iterate-through-object-properties
         for(let i=0; i<levelData.blocks[element].x.length; i++){//iterates through each block object
             const x_range = levelData.blocks[element].x[i];
@@ -81,6 +83,7 @@ function level_constructor(levelData,user_sprite){
             }
         }
     });
+    //create mobs
     Object.keys(levelData.mobs).forEach(element => {
         for(let i=0; i<levelData.mobs[element].x.length; i++){
             var mob = new Enemy(
@@ -93,19 +96,19 @@ function level_constructor(levelData,user_sprite){
                     targetWidth : 64*x_factor,
                     targetHeight : 64*y_factor,
                     animate : true,
-                    frameRate : 10,
+                    frameRate : 8,
                     update : function({stepTime}){
                         //make mob move
-                        this.x = this.x + ((stepTime*this.velocity)/100)*x_factor;
-                        if (this.x < levelData.mobs[element].movement[i][0]){
+                        this.x += ((stepTime*this.velocity)/20)*x_factor;
+                        if (this.x < (levelData.mobs[element].x[i]*64*x_factor) + x_translate - levelData.mobs[element].movement[i][0]*64*x_factor){
                             this.x = levelData.mobs[element].x[i]*64*x_factor + x_translate 
                                 - levelData.mobs[element].movement[i][0]*64*x_factor;
                             this.velocity = this.velocity*(-1);
                             this.frameSequence = [3,4]
                         }
-                        if (this.x > levelData.mobs[element].movement[i][1]){
+                        if (this.x > (levelData.mobs[element].x[i]*64*x_factor) + x_translate + levelData.mobs[element].movement[i][1]*64*x_factor){
                             this.x = levelData.mobs[element].x[i]*64*x_factor + x_translate
-                                + levelData.mobs[element].x[i]*64*x_factor;
+                                + levelData.mobs[element].movement[i][1]*64*x_factor;
                             this.velocity = this.velocity*(-1);
                             this.frameSequence = [1,2]; 
                         }
@@ -120,11 +123,53 @@ function level_constructor(levelData,user_sprite){
             else{
                 mob.frameSequence = [0];
             }
-            activeMobs.push(mob);
             mob_drawing = game.addDrawing(mob);
             mob.drawing_id = mob_drawing;
+            activeMobs.push(mob);
         }
     });
+    //spawn coins
+    for(let i=0; i<levelData.coins.x.length; i++){
+        var coin = new gameObject(
+            {
+                src : "assets/misc/" + assetData.coins,
+                x : levelData.coins.x[i]*64*x_factor + x_translate,
+                y : game_canvas.height - levelData.coins.y[i]*64*y_factor + y_translate,
+                frameWidth : 32,
+                frameHeight : 32,
+                targetWidth : 64*x_factor,
+                targetHeight : 64*y_factor,
+                animate : true,
+                frameRate : 10,
+                update : function(){
+                    //check if user has hit coin
+                }
+            }
+        );
+        var coin_drawing = game.addDrawing(coin);
+        coin.drawing_id = coin_drawing;
+        activeGameDrawings.push(coin_drawing);
+    }
+    //create end
+    var end = new gameObject(
+        {
+            src : "assets/misc/" + assetData.end,
+            x : levelData.end.x*64*x_factor + x_translate,
+            y : levelData.end.y*64*x_factor + x_translate,
+            frameWidth : 32,
+            frameHeight : 32,
+            targetWidth : 64*x_translate,
+            targetHeight : 64*y_translate,
+            frameSequence : [0],
+            update : function(){
+                //check if user is at the end & end game
+            }
+        }
+    );
+    var end_drawing = game.addDrawing(end);
+    end.drawing_id = end_drawing;
+    activeGameDrawings.push(end_drawing);
+    //create player
 }
 
 function main_game(level=0,user_sprite='blue-person.png'){
