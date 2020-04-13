@@ -86,7 +86,7 @@ function level_constructor(levelData,user_sprite){
             var mob = new Enemy(
                 {
                     src : "assets/sprites/mobiles/"+assetData.mobs[element],
-                    x : levelData.mobs[element].x[i]*64*x_factor + x_translate,
+                    x : (levelData.mobs[element].x[i]*64*x_factor) + x_translate,
                     y : game_canvas.height - (levelData.mobs[element].y[i]+1)*64*y_factor + y_translate,
                     frameWidth : 32,
                     frameHeight : 32,
@@ -113,7 +113,7 @@ function level_constructor(levelData,user_sprite){
                     }
                 }
             );
-            if (levelData.mobs[element].movement[0]!=levelData.mobs[element].movement[1]){
+            if (levelData.mobs[element].movement[i][0]!=levelData.mobs[element].movement[i][1]){
                 mob.velocity = -1;
                 mob.frameSequence = [1,2];
             }
