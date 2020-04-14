@@ -18,11 +18,14 @@ Drew some mobs (still not drawing exactly where they need to be, but at least th
 
 [4-13-20]
 --Changes--
-Made GameObject class (I could've have used the Enemy class but \[o_o]/)
+Changed Enemy class to GameObject class
 Mobs now draw and animate properly
 Coins and end spawn properly
+Created player
 
 --To-do--
-create player
+fix physics
+work on sidescrolling
+get better sprites
 
 --Help me Mr. Hinkle, I don't know what I'm doing--

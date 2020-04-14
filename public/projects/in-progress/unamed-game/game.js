@@ -1,6 +1,8 @@
 const activeGameDrawings = [];
 const activeMobs = [];
+const activeHandlers = [];
 var imageData;
+var player;
 var x_translate = 0;
 var y_translate = 0;
 
@@ -62,6 +64,22 @@ function level_constructor(levelData,user_sprite){
                                     game_canvas.height-((y+1)*64*y_factor)+y_translate,
                                     64*x_factor,64*y_factor
                                 );
+                                //check player so they don't sink
+                                if(player.x>=(x*64*x_factor)+x_translate && player.x<=((x+1)*64*x_factor)+x_translate){
+                                    if(player.y>game_canvas.height-((y+2)*64*y_factor)+y_translate){
+                                        player.y = game_canvas.height-((y+2)*64*y_factor)+y_translate;
+                                        //check frameSequence and fix after a jump
+                                        if(player.jumps > 0){
+                                            if(player.frameSequence == [1]){
+                                                player.frameSequence = [0];
+                                            }
+                                            else{
+                                                player.frameSequence = [2]
+                                            }
+                                        }
+                                        player.jumps = 0;
+                                    }
+                                }
                             }
                         )
                     }
@@ -86,7 +104,7 @@ function level_constructor(levelData,user_sprite){
     //create mobs
     Object.keys(levelData.mobs).forEach(element => {
         for(let i=0; i<levelData.mobs[element].x.length; i++){
-            var mob = new Enemy(
+            var mob = new gameObject(
                 {
                     src : "assets/sprites/mobiles/"+assetData.mobs[element],
                     x : (levelData.mobs[element].x[i]*64*x_factor) + x_translate,
@@ -134,7 +152,7 @@ function level_constructor(levelData,user_sprite){
             {
                 src : "assets/misc/" + assetData.coins,
                 x : levelData.coins.x[i]*64*x_factor + x_translate,
-                y : game_canvas.height - levelData.coins.y[i]*64*y_factor + y_translate,
+                y : game_canvas.height - (levelData.coins.y[i]+1)*64*y_factor + y_translate,
                 frameWidth : 32,
                 frameHeight : 32,
                 targetWidth : 64*x_factor,
@@ -155,11 +173,11 @@ function level_constructor(levelData,user_sprite){
         {
             src : "assets/misc/" + assetData.end,
             x : levelData.end.x*64*x_factor + x_translate,
-            y : levelData.end.y*64*x_factor + x_translate,
+            y : game_canvas.height - (levelData.end.y+1)*64*x_factor + y_translate,
             frameWidth : 32,
             frameHeight : 32,
-            targetWidth : 64*x_translate,
-            targetHeight : 64*y_translate,
+            targetWidth : 64*x_factor,
+            targetHeight : 64*y_factor,
             frameSequence : [0],
             update : function(){
                 //check if user is at the end & end game
@@ -170,12 +188,77 @@ function level_constructor(levelData,user_sprite){
     end.drawing_id = end_drawing;
     activeGameDrawings.push(end_drawing);
     //create player
+    player = new Player(
+        {
+            src : "assets/sprites/user/" + user_sprite,
+            x : levelData.spawn.x*64*x_factor,
+            y : game_canvas.height - (levelData.spawn.y+1)*64*y_factor,
+            frameWidth : 32,
+            frameHeight : 32,
+            targetWidth : 64*x_factor,
+            targetHeight : 64*y_factor,
+            frameSequence : [0],
+            frameRate : 8,
+            update : function({stepTime}){
+                if(this.moved==false){
+                    if(this.frameSequence.length > 1){
+                        this.frameSequence.pop()
+                    }
+                }
+                this.y += -(this.velocity*32*y_factor)*stepTime/1000;
+                this.velocity = -5*64*y_factor*stepTime/1000
+                this.moved = false;
+            }
+        }    
+    );
+    var player_drawing = game.addDrawing(player);
+    player.drawing_id = player_drawing;
+    activeGameDrawings.push(player_drawing);
+}
+
+function addGameHandlers(){
+    var jumpHandler = game.addHandler('keyup',
+        function({event}){
+            //jump
+            if([' ','w','ArrowUp'].includes(event.key)){
+                if(player.jumps < 2){
+                    player.velocity = 4*64*y_factor;
+                    player.jumps += 1;
+                    if (player.frameSequence[0] == 0){
+                        player.frameSequence = [1]
+                    }
+                    else {
+                        player.frameSequence = [3]
+                    }
+                }
+                console.log('jump');
+            }
+        }
+    );
+    activeHandlers.push(jumpHandler);
+    var movementHandler = game.addHandler('keydown',
+        function({event}){
+            //move right
+            if(['d','ArrowRight'].includes(event.key)){
+                player.x += 4/100*(64*x_factor);
+                player.frameSequence = [0,1];
+                player.moved = true;
+            }
+            //move left
+            if(['a','ArrowLeft'].includes(event.key)){
+                player.x += -4/100*(64*x_factor);
+                player.frameSequence = [2,3];
+                player.moved = true;
+            }
+        }
+    );
 }
 
 function main_game(level=0,user_sprite='blue-person.png'){
     var levelData = levels[level];
     init_images();
     var level = level_constructor(levelData,user_sprite);
+    addGameHandlers();
 }
 
 function menu(){
