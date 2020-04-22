@@ -3,8 +3,9 @@ class Player extends Sprite {
         super(param);
         this.drawing_id = 0;
         this.jumps = 0;
-        this.velocity = 0;
+        this.y_vel = 0;
         this.moved = false;
         this.lives = 3;
+        this.x_vel = 0;
     }
 }

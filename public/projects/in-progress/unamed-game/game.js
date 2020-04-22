@@ -104,7 +104,7 @@ function level_constructor(levelData,user_sprite){
     //create mobs
     Object.keys(levelData.mobs).forEach(element => {
         for(let i=0; i<levelData.mobs[element].x.length; i++){
-            var mob = new gameObject(
+            var mob = new Sprite(
                 {
                     src : "assets/sprites/mobiles/"+assetData.mobs[element],
                     x : (levelData.mobs[element].x[i]*64*x_factor) + x_translate,
@@ -139,6 +139,7 @@ function level_constructor(levelData,user_sprite){
                 mob.frameSequence = [1,2];
             }
             else{
+                mob.velocity = 0;
                 mob.frameSequence = [0];
             }
             mob_drawing = game.addDrawing(mob);
@@ -148,7 +149,7 @@ function level_constructor(levelData,user_sprite){
     });
     //spawn coins
     for(let i=0; i<levelData.coins.x.length; i++){
-        var coin = new gameObject(
+        var coin = new Sprite(
             {
                 src : "assets/misc/" + assetData.coins,
                 x : levelData.coins.x[i]*64*x_factor + x_translate,
@@ -169,7 +170,7 @@ function level_constructor(levelData,user_sprite){
         activeGameDrawings.push(coin_drawing);
     }
     //create end
-    var end = new gameObject(
+    var end = new Sprite(
         {
             src : "assets/misc/" + assetData.end,
             x : levelData.end.x*64*x_factor + x_translate,
@@ -188,7 +189,7 @@ function level_constructor(levelData,user_sprite){
     end.drawing_id = end_drawing;
     activeGameDrawings.push(end_drawing);
     //create player
-    player = new Player(
+    player = new Sprite(
         {
             src : "assets/sprites/user/" + user_sprite,
             x : levelData.spawn.x*64*x_factor,
@@ -202,27 +203,33 @@ function level_constructor(levelData,user_sprite){
             update : function({stepTime}){
                 if(this.moved==false){
                     if(this.frameSequence.length > 1){
-                        this.frameSequence.pop()
+                        this.frameSequence.pop();
                     }
                 }
-                this.y += -(this.velocity*32*y_factor)*stepTime/1000;
-                this.velocity = -5*64*y_factor*stepTime/1000
+                this.y += -(this.y_vel*64*y_factor)*(stepTime/1000);
+                this.x += (this.x_vel*64*x_factor)*(stepTime/1000);
+                this.y_vel = -5*64*y_factor*stepTime/1000;
+                this.x_vel = 0;
                 this.moved = false;
             }
         }    
     );
+    player.jumps = 0;
+    player.y_vel = 0;
+    player.x_vel = 0;
+    player.moved = false;
     var player_drawing = game.addDrawing(player);
     player.drawing_id = player_drawing;
     activeGameDrawings.push(player_drawing);
 }
 
 function addGameHandlers(){
-    var jumpHandler = game.addHandler('keyup',
+    /*var jumpHandler = game.addHandler('keyup',
         function({event}){
             //jump
             if([' ','w','ArrowUp'].includes(event.key)){
                 if(player.jumps < 2){
-                    player.velocity = 4*64*y_factor;
+                    player.y_vel = 4*64*y_factor;
                     player.jumps += 1;
                     if (player.frameSequence[0] == 0){
                         player.frameSequence = [1]
@@ -234,21 +241,35 @@ function addGameHandlers(){
                 console.log('jump');
             }
         }
-    );
-    activeHandlers.push(jumpHandler);
+    );*/
+    //activeHandlers.push(jumpHandler);
     var movementHandler = game.addHandler('keydown',
         function({event}){
             //move right
             if(['d','ArrowRight'].includes(event.key)){
-                player.x += 4/100*(64*x_factor);
+                player.x_vel = 3;
                 player.frameSequence = [0,1];
                 player.moved = true;
             }
             //move left
             if(['a','ArrowLeft'].includes(event.key)){
-                player.x += -4/100*(64*x_factor);
+                player.x_vel = -3;
                 player.frameSequence = [2,3];
                 player.moved = true;
+            }
+            //jump
+            if([' ','w','ArrowUp'].includes(event.key)){
+                if(player.jumps < 2){
+                    player.y_vel = 4*64*y_factor;
+                    player.jumps += 1;
+                    if (player.frameSequence[0] == 0){
+                        player.frameSequence = [1]
+                    }
+                    else {
+                        player.frameSequence = [3]
+                    }
+                }
+                console.log('jump');
             }
         }
     );

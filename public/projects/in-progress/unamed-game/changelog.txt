@@ -1,20 +1,13 @@
-[4-9-20]
---Changes--
-Fixed typo and got background drawn
-Built logic of levelConstructor for block properties
-Started initializing image loader
+--Help me Mr. Hinkle, I don't know what I'm doing--
 
-[4-10-20]
---Changes--
-Spawned some blocks
-Another weird note: the background doesn't draw properly; may be an issue with the canvas positioning
-Changed format of properties of blocks
+--To-do--
+fix physics
+work on sidescrolling
+get better sprites
+change player and gameObject classes to just object constructors
 
-[4-11-20]
---Changes--
-Worked on mobs
-Extended Sprite class to Enemy class to add velocity
-Drew some mobs (still not drawing exactly where they need to be, but at least they draw)
+[4-22-20]
+No longer extending classes
 
 [4-13-20]
 --Changes--
@@ -23,9 +16,20 @@ Mobs now draw and animate properly
 Coins and end spawn properly
 Created player
 
---To-do--
-fix physics
-work on sidescrolling
-get better sprites
+[4-11-20]
+--Changes--
+Worked on mobs
+Extended Sprite class to Enemy class to add velocity
+Drew some mobs (still not drawing exactly where they need to be, but at least they draw)
 
---Help me Mr. Hinkle, I don't know what I'm doing--
+[4-10-20]
+--Changes--
+Spawned some blocks
+Another weird note: the background doesn't draw properly; may be an issue with the canvas positioning
+Changed format of properties of blocks
+
+[4-9-20]
+--Changes--
+Fixed typo and got background drawn
+Built logic of levelConstructor for block properties
+Started initializing image loader
