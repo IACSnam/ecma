@@ -1,13 +1,12 @@
---Help me Mr. Hinkle, I don't know what I'm doing--
-
 --To-do--
 fix physics
 work on sidescrolling
 get better sprites
-change player and gameObject classes to just object constructors
+fix listeners
 
 [4-22-20]
 No longer extending classes
+Added listeners on all objects that relate to the player
 
 [4-13-20]
 --Changes--

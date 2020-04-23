@@ -130,10 +130,39 @@ function level_constructor(levelData,user_sprite){
                             this.velocity = this.velocity*(-1);
                             this.frameSequence = [1,2]; 
                         }
-                        //check if user is dead or mob is dead
+                        //check if user/mob is dead
+                        if (player.x>=this.x && player.x<=3*(this.x+this.targetWidth)/4){
+                            //if user is dead
+                            if (player.y<=this.y && player.y>=this.y-this.targetHeight/2){
+                                console.log("player dead");
+                            }
+                            //if mob is dead
+                            else if (player.y<this.y-this.targetHeight/2 && player.y>=this.y-this.targetHeight){
+                                if(this.dead == false){
+                                    console.log("mob dead");
+                                    this.dead = true;
+                                    this.velocity = 0;
+                                    this.frameSequence = [5];
+                                    setTimeout(function(){
+                                        game.removeDrawing(this.drawing_id);
+                                        for(let i=0;i<activeGameDrawings.length;i++){
+                                            if (this.drawing_id == activeGameDrawings[i]){
+                                                activeGameDrawings.splice(i,1);
+                                            }
+                                        }
+                                        for(let i=0;i<activeMobs.length;i++){
+                                            if (this.drawing_id == activeMobs[i].drawing_id){
+                                                activeMobs.splice(i,1);
+                                            }
+                                        }
+                                    },100);
+                                }
+                            }
+                        }
                     }
                 }
             );
+            mob.dead = false;
             if (levelData.mobs[element].movement[i][0]!=levelData.mobs[element].movement[i][1]){
                 mob.velocity = -1;
                 mob.frameSequence = [1,2];
@@ -161,10 +190,23 @@ function level_constructor(levelData,user_sprite){
                 animate : true,
                 frameRate : 10,
                 update : function(){
-                    //check if user has hit coin
+                    if(coin.active == true){
+                        if (player.x+targetWidth/2>=this.x && player.x+targetWidth/2<=this.x+targetWidth){
+                            if (player.y-targetHeight/2<=this.y+targetHeight && player.y-targetHeight/2>=this.y){
+                                this.active = false;
+                                game.removeDrawing(this.drawing_id);
+                                for(let i=0; i<activeGameDrawings.length; i++){
+                                    if(activeGameDrawings[i]==this.drawing_id){
+                                        activeGameDrawings.splice(i,1);
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         );
+        coin.active = true;
         var coin_drawing = game.addDrawing(coin);
         coin.drawing_id = coin_drawing;
         activeGameDrawings.push(coin_drawing);
@@ -182,6 +224,12 @@ function level_constructor(levelData,user_sprite){
             frameSequence : [0],
             update : function(){
                 //check if user is at the end & end game
+                if(player.x+targetWidth/2>=this.x && player.x+targetWidth/2<=this.x+targetWidth){
+                    if(player.y+targetHeight/2<=this.y+targetHeight && player.y+targetHeight/2>=this.y){
+                        this.frameSequence = [1];
+                        //endgame
+                    }
+                }
             }
         }
     );
@@ -218,6 +266,7 @@ function level_constructor(levelData,user_sprite){
     player.y_vel = 0;
     player.x_vel = 0;
     player.moved = false;
+    player.coins = 0;
     var player_drawing = game.addDrawing(player);
     player.drawing_id = player_drawing;
     activeGameDrawings.push(player_drawing);
