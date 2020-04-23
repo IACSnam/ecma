@@ -190,9 +190,9 @@ function level_constructor(levelData,user_sprite){
                 animate : true,
                 frameRate : 10,
                 update : function(){
-                    if(coin.active == true){
-                        if (player.x+targetWidth/2>=this.x && player.x+targetWidth/2<=this.x+targetWidth){
-                            if (player.y-targetHeight/2<=this.y+targetHeight && player.y-targetHeight/2>=this.y){
+                    if(this.active == true){
+                        if (player.x+this.targetWidth/2>=this.x && player.x+this.targetWidth/2<=this.x+this.targetWidth){
+                            if (player.y-this.targetHeight/2<=this.y+this.targetHeight && player.y-this.targetHeight/2>=this.y){
                                 this.active = false;
                                 game.removeDrawing(this.drawing_id);
                                 for(let i=0; i<activeGameDrawings.length; i++){
@@ -224,8 +224,8 @@ function level_constructor(levelData,user_sprite){
             frameSequence : [0],
             update : function(){
                 //check if user is at the end & end game
-                if(player.x+targetWidth/2>=this.x && player.x+targetWidth/2<=this.x+targetWidth){
-                    if(player.y+targetHeight/2<=this.y+targetHeight && player.y+targetHeight/2>=this.y){
+                if(player.x+this.targetWidth/2>=this.x && player.x+this.targetWidth/2<=this.x+this.targetWidth){
+                    if(player.y+this.targetHeight/2<=this.y+this.targetHeight && player.y+this.targetHeight/2>=this.y){
                         this.frameSequence = [1];
                         //endgame
                     }
