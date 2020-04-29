@@ -69,15 +69,18 @@ function level_constructor(levelData,user_sprite){
                                     if(player.y>game_canvas.height-((y+2)*64*y_factor)+y_translate){
                                         player.y = game_canvas.height-((y+2)*64*y_factor)+y_translate;
                                         //check frameSequence and fix after a jump
-                                        if(player.jumps > 0){
-                                            if(player.frameSequence == [1]){
-                                                player.frameSequence = [0];
+                                        if(player.justjumped == false){
+                                            if(player.jumps > 0){
+                                                if(player.frameSequence[0] == [1]){
+                                                    player.frameSequence = [0];
+                                                }
+                                                else{
+                                                    player.frameSequence = [2]
+                                                }
                                             }
-                                            else{
-                                                player.frameSequence = [2]
-                                            }
+                                            player.jumps = 0;
                                         }
-                                        player.jumps = 0;
+                                        player.justjumped = false;
                                     }
                                 }
                             }
@@ -311,11 +314,12 @@ function addGameHandlers(){
                 if(player.jumps < 2){
                     player.y_vel = 4*64*y_factor;
                     player.jumps += 1;
-                    if (player.frameSequence[0] == 0){
-                        player.frameSequence = [1]
+                    player.justjumped = true;
+                    if (player.frameSequence[0] == 0 || player.frameSequence[0] == 1){
+                        player.frameSequence = [1];
                     }
                     else {
-                        player.frameSequence = [3]
+                        player.frameSequence = [3];
                     }
                 }
                 console.log('jump');

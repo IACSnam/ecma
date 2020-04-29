@@ -4,6 +4,9 @@ work on sidescrolling
 get better sprites
 fix listeners
 
+[4-28-20]
+Fixed issues with jumping animation
+
 [4-22-20]
 No longer extending classes
 Added listeners on all objects that relate to the player
