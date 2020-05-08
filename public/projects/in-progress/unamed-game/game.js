@@ -69,6 +69,7 @@ function level_constructor(levelData,user_sprite){
                                 if(player.x>=block_x && player.x<=block_x+(64*x_factor)){
                                     if(player.y>block_y-(64*y_factor)){
                                         player.y = block_y-(64*y_factor);
+                                        player.realy = block_y-(64*y_factor) - y_translate;
                                         //check frameSequence and fix after a jump
                                         if(player.justjumped == false){
                                             if(player.jumps > 0){
@@ -235,6 +236,7 @@ function level_constructor(levelData,user_sprite){
             targetWidth : 64*x_factor,
             targetHeight : 64*y_factor,
             frameSequence : [0],
+            frameRate : 12,
             update : function(){
                 //check if user is at the end & end game
                 if(player.x+this.targetWidth/2>=this.x && player.x+this.targetWidth/2<=this.x+this.targetWidth){
@@ -267,12 +269,29 @@ function level_constructor(levelData,user_sprite){
                         this.frameSequence.pop();
                     }
                 }
-                this.y += -(this.y_vel*64*y_factor)*(stepTime/1000);
-                this.x += (this.x_vel*64*x_factor)*(stepTime/1000);
+                this.realy += -(this.y_vel*64*y_factor)*(stepTime/1000);
+                this.realx += (this.x_vel*64*x_factor)*(stepTime/1000);
+                /*if(this.realy < game_canvas.height - 6*64*y_factor){
+                    y_translate = this.realy - (game_canvas.height - 6*64*y_factor);
+                }
+                else{
+                    y_translate = 0;
+                }
+                */
+                if(this.realx > 10*64*x_factor){
+                    x_translate = 10*64*x_factor - this.realx;
+                }
+                else{
+                    x_translate = 0;
+                }
+                this.y = this.realy + y_translate;
+                this.x = this.realx + x_translate;
                 this.y_vel = (-3*64*y_factor)*(stepTime/1000);
             }
         }    
     );
+    player.realx = levelData.spawn.x*64*x_factor;
+    player.realy = game_canvas.height - (levelData.spawn.y+1)*64*y_factor
     player.jumps = 0;
     player.y_vel = 0;
     player.x_vel = 0;

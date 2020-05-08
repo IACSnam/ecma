@@ -8,6 +8,9 @@ make a main menu
 save scores/user data
 enable mods
 
+[5-8-20]
+Added rudimentary sidescrolling along the x axis (need to fix the mobs and scrolling on the y axis) 
+
 [5-3-20]
 I tried to fix gravity. A lot of problems came up so I undid all the work for today.
 
