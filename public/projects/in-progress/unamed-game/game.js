@@ -58,16 +58,17 @@ function level_constructor(levelData,user_sprite){
                     if(!levelData.blocks[element].lethal){
                         var drawing = game.addDrawing(
                             function({ctx}){
+                                var block_x = x*64*x_factor+x_translate;
+                                var block_y = game_canvas.height-((y+1)*64*y_factor)+y_translate;
                                 //properly draw blocks
                                 ctx.drawImage(imageData[element],
-                                    (x*64*x_factor)+x_translate,
-                                    game_canvas.height-((y+1)*64*y_factor)+y_translate,
+                                    block_x, block_y,
                                     64*x_factor,64*y_factor
                                 );
                                 //check player so they don't sink
-                                if(player.x>=(x*64*x_factor)+x_translate && player.x<=((x+1)*64*x_factor)+x_translate){
-                                    if(player.y>game_canvas.height-((y+2)*64*y_factor)+y_translate){
-                                        player.y = game_canvas.height-((y+2)*64*y_factor)+y_translate;
+                                if(player.x>=block_x && player.x<=block_x+(64*x_factor)){
+                                    if(player.y>block_y-(64*y_factor)){
+                                        player.y = block_y-(64*y_factor);
                                         //check frameSequence and fix after a jump
                                         if(player.justjumped == false){
                                             if(player.jumps > 0){
@@ -81,6 +82,15 @@ function level_constructor(levelData,user_sprite){
                                             player.jumps = 0;
                                         }
                                         player.justjumped = false;
+                                    }
+                                }
+                                //detects if player collides with blocks so they don't ghost through the blocks
+                                if(player.y>=block_y && player.y<=block_y+(64*y_factor)){
+                                    if(player.x+64*x_factor>block_x && player.x+64*x_factor<block_x){
+                                        player.x = block_x-64*x_factor;
+                                    }
+                                    if(player.x<block_x+64*x_factor && player.x>block_x){
+                                        player.x = block_x+64*x_factor;
                                     }
                                 }
                             }
@@ -259,9 +269,7 @@ function level_constructor(levelData,user_sprite){
                 }
                 this.y += -(this.y_vel*64*y_factor)*(stepTime/1000);
                 this.x += (this.x_vel*64*x_factor)*(stepTime/1000);
-                this.y_vel = -5*64*y_factor*stepTime/1000;
-                this.x_vel = 0;
-                this.moved = false;
+                this.y_vel = (-3*64*y_factor)*(stepTime/1000);
             }
         }    
     );
@@ -276,25 +284,6 @@ function level_constructor(levelData,user_sprite){
 }
 
 function addGameHandlers(){
-    /*var jumpHandler = game.addHandler('keyup',
-        function({event}){
-            //jump
-            if([' ','w','ArrowUp'].includes(event.key)){
-                if(player.jumps < 2){
-                    player.y_vel = 4*64*y_factor;
-                    player.jumps += 1;
-                    if (player.frameSequence[0] == 0){
-                        player.frameSequence = [1]
-                    }
-                    else {
-                        player.frameSequence = [3]
-                    }
-                }
-                console.log('jump');
-            }
-        }
-    );*/
-    //activeHandlers.push(jumpHandler);
     var movementHandler = game.addHandler('keydown',
         function({event}){
             //move right
@@ -326,6 +315,14 @@ function addGameHandlers(){
             }
         }
     );
+    var EndMovementHandler = game.addHandler('keyup',
+        function({event}){
+            if(['d','ArrowRight','a','ArrowLeft'].includes(event.key)){
+                player.moved = false;
+                player.x_vel = 0;
+            }
+        }
+    );
 }
 
 function main_game(level=0,user_sprite='blue-person.png'){
@@ -336,10 +333,5 @@ function main_game(level=0,user_sprite='blue-person.png'){
 }
 
 function menu(){
-    game.addHandler("click",
-        function({x,y}){
-            console.log(x+","+y);
-        }    
-    );
     main_game();
 }
