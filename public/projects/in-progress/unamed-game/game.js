@@ -271,19 +271,7 @@ function level_constructor(levelData,user_sprite){
                 }
                 this.realy += -(this.y_vel*64*y_factor)*(stepTime/1000);
                 this.realx += (this.x_vel*64*x_factor)*(stepTime/1000);
-                /*if(this.realy < game_canvas.height - 6*64*y_factor){
-                    y_translate = this.realy - (game_canvas.height - 6*64*y_factor);
-                }
-                else{
-                    y_translate = 0;
-                }
-                */
-                if(this.realx > 10*64*x_factor){
-                    x_translate = 10*64*x_factor - this.realx;
-                }
-                else{
-                    x_translate = 0;
-                }
+                updateSidescrolling()
                 this.y = this.realy + y_translate;
                 this.x = this.realx + x_translate;
                 this.y_vel = (-3*64*y_factor)*(stepTime/1000);
@@ -342,6 +330,22 @@ function addGameHandlers(){
             }
         }
     );
+}
+
+function updateSidescrolling(){
+    /*if(player.realy < game_canvas.height - 6*64*y_factor){
+        y_translate = player.realy - (game_canvas.height - 6*64*y_factor);
+    }
+    else{
+        y_translate = 0;
+    }
+    */
+    if(player.realx > 10*64*x_factor){
+        x_translate = 10*64*x_factor - player.realx;
+    }
+    else{
+        x_translate = 0;
+    }
 }
 
 function main_game(level=0,user_sprite='blue-person.png'){
