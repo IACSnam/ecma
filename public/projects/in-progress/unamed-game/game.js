@@ -68,21 +68,23 @@ function level_constructor(levelData,user_sprite){
                                 //check player so they don't sink
                                 if(player.x>=block_x && player.x<=block_x+(64*x_factor)){
                                     if(player.y>block_y-(64*y_factor)){
-                                        player.y = block_y-(64*y_factor);
-                                        player.realy = block_y-(64*y_factor) - y_translate;
-                                        //check frameSequence and fix after a jump
-                                        if(player.justjumped == false){
-                                            if(player.jumps > 0){
-                                                if(player.frameSequence[0] == [1]){
-                                                    player.frameSequence = [0];
+                                        if(player.y<block_y){
+                                            player.y = block_y-(64*y_factor);
+                                            player.realy = block_y-(64*y_factor) - y_translate;
+                                            //check frameSequence and fix after a jump
+                                            if(player.justjumped == false){
+                                                if(player.jumps > 0){
+                                                    if(player.frameSequence[0] == [1]){
+                                                        player.frameSequence = [0];
+                                                    }
+                                                    else{
+                                                        player.frameSequence = [2]
+                                                    }
                                                 }
-                                                else{
-                                                    player.frameSequence = [2]
-                                                }
+                                                player.jumps = 0;
                                             }
-                                            player.jumps = 0;
+                                            player.justjumped = false;
                                         }
-                                        player.justjumped = false;
                                     }
                                 }
                                 //detects if player collides with blocks so they don't ghost through the blocks
@@ -201,6 +203,7 @@ function level_constructor(levelData,user_sprite){
                 frameHeight : 32,
                 targetWidth : 64*x_factor,
                 targetHeight : 64*y_factor,
+                frameSequence : [0,1],
                 animate : true,
                 frameRate : 10,
                 update : function(){
