@@ -109,6 +109,13 @@ function level_constructor(levelData,user_sprite){
                                     64*x_factor,64*y_factor
                                 );
                                 //check if user has stepped on trap
+                                if(player.x >= (x*64*x_factor)+x_translate && player.x < ((x+1)*64*x_factor)+x_translate){
+                                    if(player.y <= game_canvas.height-((y+1)*64*y_factor)+y_translate && player.y >= game_canvas.height-((y+2)*64*y_factor)+y_translate){
+                                        if(player.dead == false){
+                                            endgame();
+                                        }
+                                    }
+                                }
                             }  
                         ); 
                     }
@@ -288,6 +295,7 @@ function level_constructor(levelData,user_sprite){
     player.x_vel = 0;
     player.moved = false;
     player.coins = 0;
+    player.dead = false;
     var player_drawing = game.addDrawing(player);
     player.drawing_id = player_drawing;
     activeGameDrawings.push(player_drawing);
@@ -349,6 +357,12 @@ function updateSidescrolling(){
     else{
         x_translate = 0;
     }
+}
+
+function endgame(){
+    player.update = function(){};
+    player.dead = true;
+    console.log("dead");
 }
 
 function main_game(level=0,user_sprite='blue-person.png'){
