@@ -214,6 +214,7 @@ function level_constructor(levelData,user_sprite){
                 animate : true,
                 frameRate : 10,
                 update : function(){
+                    this.x = levelData.coins.x[i]*64*x_factor + x_translate;
                     if(this.active == true){
                         if (player.x+this.targetWidth/2>=this.x && player.x+this.targetWidth/2<=this.x+this.targetWidth){
                             if (player.y-this.targetHeight/2<=this.y+this.targetHeight && player.y-this.targetHeight/2>=this.y){
@@ -249,6 +250,7 @@ function level_constructor(levelData,user_sprite){
             frameRate : 12,
             update : function(){
                 //check if user is at the end & end game
+                this.x = levelData.end.x*64*x_factor + x_translate;
                 if(player.x+this.targetWidth/2>=this.x && player.x+this.targetWidth/2<=this.x+this.targetWidth){
                     if(player.y+this.targetHeight/2<=this.y+this.targetHeight && player.y+this.targetHeight/2>=this.y){
                         this.frameSequence = [1];
