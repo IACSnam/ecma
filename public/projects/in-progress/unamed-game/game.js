@@ -112,7 +112,7 @@ function level_constructor(levelData,user_sprite){
                                 if(player.x >= (x*64*x_factor)+x_translate && player.x < ((x+1)*64*x_factor)+x_translate){
                                     if(player.y <= game_canvas.height-((y+1)*64*y_factor)+y_translate && player.y >= game_canvas.height-((y+2)*64*y_factor)+y_translate){
                                         if(player.dead == false){
-                                            endgame();
+                                            death();
                                         }
                                     }
                                 }
@@ -225,6 +225,7 @@ function level_constructor(levelData,user_sprite){
                                         activeGameDrawings.splice(i,1);
                                     }
                                 }
+                                player.coins += 1;
                             }
                         }
                     }
@@ -254,7 +255,7 @@ function level_constructor(levelData,user_sprite){
                 if(player.x+this.targetWidth/2>=this.x && player.x+this.targetWidth/2<=this.x+this.targetWidth){
                     if(player.y+this.targetHeight/2<=this.y+this.targetHeight && player.y+this.targetHeight/2>=this.y){
                         this.frameSequence = [1];
-                        //endgame
+                        levelComplete();
                     }
                 }
             }
@@ -276,6 +277,9 @@ function level_constructor(levelData,user_sprite){
             frameSequence : [0],
             frameRate : 8,
             update : function({stepTime}){
+                if(this.y > game_canvas.height-(levelData.floor*64*y_factor)){
+                    death();
+                }
                 if(this.moved==false){
                     if(this.frameSequence.length > 1){
                         this.frameSequence.pop();
@@ -361,10 +365,15 @@ function updateSidescrolling(){
     }
 }
 
-function endgame(){
+function death(){
     player.update = function(){};
     player.dead = true;
     console.log("dead");
+}
+
+function levelComplete(){
+    player.update = function(){};
+    console.log("victory");
 }
 
 function main_game(level=0,user_sprite='blue-person.png'){
@@ -372,8 +381,4 @@ function main_game(level=0,user_sprite='blue-person.png'){
     init_images();
     var level = level_constructor(levelData,user_sprite);
     addGameHandlers();
-}
-
-function menu(){
-    main_game();
 }

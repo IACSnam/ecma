@@ -37,5 +37,6 @@ const level0 = {
     "end":{
         "x":38,
         "y":6
-    }
+    },
+    "floor": -3
 }

@@ -32,5 +32,14 @@ function run(){
     menu();
 }
 
+function menu(){
+    main_game();
+}
+
+function realmenu(){
+    //drawbackground
+    //make buttons
+}
+
 //start
 run();
