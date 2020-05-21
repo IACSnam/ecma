@@ -8,6 +8,10 @@ make a main menu
 save scores/user data
 enable mods
 
+[5-21-20]
+Added things when die/win
+Fixed mob collision (still need to work on issue with movement & translation)
+
 [5-20-20]
 Fixed issue where coins and endpoint did not seem to spawn
 Made death conditions and win condition (mob still not perfect)

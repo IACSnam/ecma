@@ -66,7 +66,7 @@ function level_constructor(levelData,user_sprite){
                                     64*x_factor,64*y_factor
                                 );
                                 //check player so they don't sink
-                                if(player.x>=block_x && player.x<=block_x+(64*x_factor)){
+                                if(player.x+(x_factor*32)>=block_x && player.x+(x_factor*32)<=block_x+(64*x_factor)){
                                     if(player.y>block_y-(64*y_factor)){
                                         if(player.y<block_y){
                                             player.y = block_y-(64*y_factor);
@@ -154,10 +154,14 @@ function level_constructor(levelData,user_sprite){
                             this.frameSequence = [1,2]; 
                         }
                         //check if user/mob is dead
-                        if (player.x>=this.x && player.x<=3*(this.x+this.targetWidth)/4){
+                        if (player.x+(32*x_factor)>=this.x && player.x+(32*x_factor)<=this.x+this.targetWidth){
                             //if user is dead
                             if (player.y<=this.y && player.y>=this.y-this.targetHeight/2){
-                                console.log("player dead");
+                                if(this.dead == false && player.dead == false){
+                                    console.log("player dead");
+                                    player.dead = true;
+                                    death();
+                                }
                             }
                             //if mob is dead
                             else if (player.y<this.y-this.targetHeight/2 && player.y>=this.y-this.targetHeight){
@@ -166,19 +170,19 @@ function level_constructor(levelData,user_sprite){
                                     this.dead = true;
                                     this.velocity = 0;
                                     this.frameSequence = [5];
-                                    setTimeout(function(){
-                                        game.removeDrawing(this.drawing_id);
-                                        for(let i=0;i<activeGameDrawings.length;i++){
-                                            if (this.drawing_id == activeGameDrawings[i]){
-                                                activeGameDrawings.splice(i,1);
-                                            }
+                                    game.removeDrawing(this.drawing_id);
+                                    for(let i=0;i<activeGameDrawings.length;i++){
+                                        if (this.drawing_id == activeGameDrawings[i]){
+                                            activeGameDrawings.splice(i,1);
                                         }
-                                        for(let i=0;i<activeMobs.length;i++){
-                                            if (this.drawing_id == activeMobs[i].drawing_id){
-                                                activeMobs.splice(i,1);
-                                            }
+                                    }
+                                    for(let i=0;i<activeMobs.length;i++){
+                                        if (this.drawing_id == activeMobs[i].drawing_id){
+                                            activeMobs.splice(i,1);
                                         }
-                                    },100);
+                                    }
+                                    this.update = function(){};
+                                    this.animate = false;
                                 }
                             }
                         }
@@ -194,7 +198,7 @@ function level_constructor(levelData,user_sprite){
                 mob.velocity = 0;
                 mob.frameSequence = [0];
             }
-            mob_drawing = game.addDrawing(mob);
+            var mob_drawing = game.addDrawing(mob);
             mob.drawing_id = mob_drawing;
             activeMobs.push(mob);
         }
@@ -365,15 +369,39 @@ function updateSidescrolling(){
     }
 }
 
+function endgameScoreboard(state){
+    var frame = new Image();
+    frame.src = "assets/menu/menu_frame.png";
+    var message = new Image();
+    if(state){
+        message.src = "assets/menu/victory.png";
+    }
+    else{
+        message.src = "assets/menu/dead.png";
+    }
+    var board;
+    frame.onload = function(){
+        board = game.addDrawing(
+            function({ctx}){
+              ctx.drawImage(frame,game_canvas.width/4,game_canvas.height/4,game_canvas.width/2,game_canvas.height/2);
+              ctx.drawImage(message,game_canvas.width*(1/3),game_canvas.height*(2/5),game_canvas.width*(1/3),game_canvas.height*(1/3));  
+            }
+        );
+    }
+    return board;
+}
+
 function death(){
     player.update = function(){};
     player.dead = true;
     console.log("dead");
+    var board = endgameScoreboard(false);
 }
 
 function levelComplete(){
     player.update = function(){};
     console.log("victory");
+    var board = endgameScoreboard(true);
 }
 
 function main_game(level=0,user_sprite='blue-person.png'){
@@ -381,4 +409,8 @@ function main_game(level=0,user_sprite='blue-person.png'){
     init_images();
     var level = level_constructor(levelData,user_sprite);
     addGameHandlers();
+}
+
+function endLevel(){
+
 }
