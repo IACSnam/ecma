@@ -253,18 +253,26 @@ function level_constructor(levelData,user_sprite){
             targetHeight : 64*y_factor,
             frameSequence : [0],
             frameRate : 12,
-            update : function(){
+            update : function({remove}){
                 //check if user is at the end & end game
                 this.x = levelData.end.x*64*x_factor + x_translate;
-                if(player.x+this.targetWidth/2>=this.x && player.x+this.targetWidth/2<=this.x+this.targetWidth){
-                    if(player.y+this.targetHeight/2<=this.y+this.targetHeight && player.y+this.targetHeight/2>=this.y){
-                        this.frameSequence = [1];
-                        levelComplete();
+                if(end.complete == false){
+                    if(player.x+this.targetWidth/2>=this.x && player.x+this.targetWidth/2<=this.x+this.targetWidth){
+                        if(player.y+this.targetHeight/2<=this.y+this.targetHeight && player.y+this.targetHeight/2>=this.y){
+                            this.frameSequence = [1];
+                            levelComplete();
+                            end.complete = true;
+                            end.toggle();
+                        }
                     }
                 }
             }
         }
     );
+    end.toggle = function(){
+        end.update = function(){};
+    };
+    end.complete = false;
     var end_drawing = game.addDrawing(end);
     end.drawing_id = end_drawing;
     activeGameDrawings.push(end_drawing);
