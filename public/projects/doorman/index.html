@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>I don't have a name for this game</title>
+<style>
+    canvas{
+        position:absolute;
+        top: 0;
+        left: 0;
+    }
+    #container{
+        position:relative;
+        padding: 0;
+        margin: auto;
+        display:block;
+    }
+</style>
+</head>
+<body>
+    <span>
+        <button onclick="instructions_page()">Instructions</button>
+        <button onclick="about_page()">About</button>
+    </span>
+    <span id='container'>
+        <canvas class='canvas' id='background'>
+        </canvas>
+        <canvas class='canvas' id='game' 
+            style="border: 1px solid black;">
+        </canvas>
+    </span>
+    <script src='https://tomhinkle.net/util/SimpleCanvasLibrary.js'></script>
+    <script class='levelData' id='level0' src='levelData/level0.js'></script>
+    <script class='code' src='game.js'></script>
+    <script class='code' src='menu.js'></script>
+    <script class='code' src='main.js'></script>
+</body>
