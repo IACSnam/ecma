@@ -29,21 +29,11 @@ function run(){
     background_ctx = background_canvas.getContext("2d");
     //start drawing etc
     game.run();
-    menu();
-    clicktest();
+    main_game();
 }
 
 //start
 run();
-
-//Testing stuff
-function clicktest(){
-    game.addHandler("click",
-        function({x,y}){
-            console.log("x:"+x+", y:"+y);
-        }
-    );
-}
 
 function instructions_page(){
     open("./instructions");
