@@ -8,6 +8,13 @@ make a main menu
 save scores/user data
 enable mods
 
+[6-07-20]
+For the sake of time, I have decided to make separate pages for about and instructions; might possibly have to comment out menu to work on later
+
+[6-2-20]
+Added menu screen
+Menu buttons still have issues
+
 [5-21-20]
 Added things when die/win
 Fixed mob collision (still need to work on issue with movement & translation)

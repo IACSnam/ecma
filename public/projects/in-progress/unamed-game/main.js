@@ -30,16 +30,25 @@ function run(){
     //start drawing etc
     game.run();
     menu();
-}
-
-function menu(){
-    main_game();
-}
-
-function realmenu(){
-    //drawbackground
-    //make buttons
+    clicktest();
 }
 
 //start
 run();
+
+//Testing stuff
+function clicktest(){
+    game.addHandler("click",
+        function({x,y}){
+            console.log("x:"+x+", y:"+y);
+        }
+    );
+}
+
+function instructions_page(){
+    open("./instructions");
+}
+
+function about_page(){
+    open("./about");
+}
